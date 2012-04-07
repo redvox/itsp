@@ -27,4 +27,18 @@ public class KryptoTest {
             }
         }
     }
+
+    @Test
+    public void SkytaleTest() {
+        for (Integer key : Iterables.toIterable(PrimitiveGenerators.integers(0, 100))) {
+            for (String cleartext : Iterables.toIterable(PrimitiveGenerators.strings())) {
+                // encrypt
+                String cyphertext = Krypto.skytale(cleartext, key, true);
+
+                // decrypt
+                String result = Krypto.skytale(cyphertext, key, false);
+                assertEquals(cleartext, result);
+            }
+        }
+    }
 }
