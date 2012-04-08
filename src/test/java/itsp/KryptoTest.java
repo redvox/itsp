@@ -15,6 +15,16 @@ import org.testng.annotations.Test;
 public class KryptoTest {
 
     @Test
+    public void CaesarTestVector() {
+        String cleartext = "IJKLMN";
+        String expectedCyphertext = "LMNOPQ";
+
+        assertEquals(expectedCyphertext, Krypto.cesar(cleartext, 3, true));
+        assertEquals(cleartext, Krypto.cesar(expectedCyphertext, 3, false));
+    }
+
+
+    @Test
     public void CaesarTest() {
         for (Integer key : Iterables.toIterable(PrimitiveGenerators.integers(0, 255))) {
             for (String cleartext : Iterables.toIterable(PrimitiveGenerators.strings())) {
@@ -26,6 +36,15 @@ public class KryptoTest {
                 assertEquals(cleartext, result);
             }
         }
+    }
+
+    @Test
+    public void SkytaleTestVector() {
+        String cleartext = "TROOPSHEADINGWESTNEEDMORESUPPLIESSENDGENERALDUBOISMENTOAID";
+        String expectedCyphertext = "TIDIEMRNMEREOGOSANOWRSLTPEEEDOSSSNUAHTUDBIENPGODAEPEIDELNS";
+        assertEquals(cleartext.length(), expectedCyphertext.length());
+        assertEquals(expectedCyphertext, Krypto.skytale(cleartext, 6, true));
+        assertEquals(cleartext, Krypto.skytale(expectedCyphertext, 6, false));
     }
 
     @Test
