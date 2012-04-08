@@ -20,26 +20,16 @@ public class Krypto {
 	}
 
 	public static String caesar(String text, int key, boolean encrypt) {
-		char[] alphabet = { ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
-				'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
-				'v', 'w', 'x', 'y', 'z' };
-		List<String> alphabetlist = new ArrayList<String>();
-		for (int i = 0; i < alphabet.length; i++) {
-			alphabetlist.add("" + alphabet[i]);
-		}
 		char[] eingabe = text.toCharArray();
 		char[] ausgabe = new char[eingabe.length];
 
 		if (encrypt) {
 			for (int i = 0; i < eingabe.length; i++) {
-				ausgabe[i] = alphabet[(alphabetlist.indexOf("" + eingabe[i]) + key)
-						% alphabet.length];
+				ausgabe[i] = (char) ((eingabe[i] + key) % 256);
 			}
 		} else {
 			for (int i = 0; i < eingabe.length; i++) {
-				ausgabe[i] = alphabet[(alphabetlist.indexOf("" + eingabe[i])
-						+ alphabet.length - key)
-						% alphabet.length];
+                ausgabe[i] = (char) ((256 + eingabe[i] - key) % 256);
 			}
 		}
 
