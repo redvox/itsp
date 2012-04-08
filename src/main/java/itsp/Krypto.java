@@ -9,9 +9,9 @@ public class Krypto {
 
 	public static void main(String[] args) {
 
-		// System.out.println(cesar("Hallo du da", 4, true));
-		System.out.println(cesar("wie geht es dir zzwzz a", 4, true));
-		System.out.println(cesar(" midkilxdiwdhmvdcc ccde", 4, false));
+		// System.out.println(caesar("Hallo du da", 4, true));
+		System.out.println(caesar("wie geht es dir zzwzz a", 4, true));
+		System.out.println(caesar(" midkilxdiwdhmvdcc ccde", 4, false));
 
 		System.out.println(skytale("hallo wie geht es dir", 4, true));
 		System.out.println(skytale("hwhdaitile rl e ogs  e  ", 4, false));
@@ -19,7 +19,7 @@ public class Krypto {
 		analyse("Hallo wie geht es dir eigentlich so");
 	}
 
-	public static String cesar(String text, int key, boolean encrypt) {
+	public static String caesar(String text, int key, boolean encrypt) {
 		char[] alphabet = { ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
 				'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
 				'v', 'w', 'x', 'y', 'z' };

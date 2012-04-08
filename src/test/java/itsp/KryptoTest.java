@@ -19,8 +19,8 @@ public class KryptoTest {
         String cleartext = "IJKLMN";
         String expectedCyphertext = "LMNOPQ";
 
-        assertEquals(expectedCyphertext, Krypto.cesar(cleartext, 3, true));
-        assertEquals(cleartext, Krypto.cesar(expectedCyphertext, 3, false));
+        assertEquals(expectedCyphertext, Krypto.caesar(cleartext, 3, true));
+        assertEquals(cleartext, Krypto.caesar(expectedCyphertext, 3, false));
     }
 
 
@@ -29,10 +29,10 @@ public class KryptoTest {
         for (Integer key : Iterables.toIterable(PrimitiveGenerators.integers(0, 255))) {
             for (String cleartext : Iterables.toIterable(PrimitiveGenerators.strings())) {
                 // encrypt
-                String cyphertext = Krypto.cesar(cleartext, key, true);
+                String cyphertext = Krypto.caesar(cleartext, key, true);
 
                 // decrypt
-                String result = Krypto.cesar(cyphertext, key, false);
+                String result = Krypto.caesar(cyphertext, key, false);
                 assertEquals(cleartext, result);
             }
         }
