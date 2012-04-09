@@ -36,72 +36,29 @@ public class Krypto {
 		return new String(ausgabe);
 	}
 
-	public static String skytale(String text, int key, boolean encrypt) {
-		int streifen_lange = 6;
-		char[] eingabe = text.toCharArray();
-		char[][] zwischen = new char[key][streifen_lange];
+	public static String skytale(String inputStr, int key, boolean encrypt) {
+        if (inputStr.isEmpty()) return new String();
 
-		for (int i = 0; i < zwischen.length; i++) {
-			for (int j = 0; j < zwischen[0].length; j++) {
-				zwischen[i][j] = ' ';
-			}
-		}
+        char[] input = inputStr.toCharArray();
+        int outputSize = (int) (Math.ceil((double)input.length / (double)key)) * key;
+        char[] output = new char[outputSize];
 
-		StringBuffer ausgabe = new StringBuffer();
-		if (encrypt) {
-			int k = 0;
-			int l = 0;
-			for (int i = 0; i < eingabe.length; i++) {
-				if (l == streifen_lange) {
-					l = 0;
-					k++;
-				}
-				zwischen[k][l] = eingabe[i];
-				l++;
-			}
-
-			for (int i = 0; i < zwischen.length; i++) {
-				for (int j = 0; j < zwischen[0].length; j++) {
-					System.out.print(zwischen[i][j]);
-				}
-				System.out.println();
-			}
-
-			for (int l1 = 0; l1 < zwischen[0].length; l1++) {
-				for (int k1 = 0; k1 < zwischen.length; k1++) {
-					ausgabe.append(zwischen[k1][l1]);
-				}
-			}
-		} else {
-			int k = 0;
-			int l = 0;
-			for (int i = 0; i < eingabe.length; i++) {
-				if (k == key) {
-					k = 0;
-					l++;
-				}
-				zwischen[k][l] = eingabe[i];
-				k++;
-			}
-
-			for (int i = 0; i < zwischen.length; i++) {
-				for (int j = 0; j < zwischen[0].length; j++) {
-					System.out.print(zwischen[i][j]);
-				}
-				System.out.println();
-			}
-
-			for (int k1 = 0; k1 < zwischen.length; k1++) {
-				for (int l1 = 0; l1 < zwischen[0].length; l1++) {
-					ausgabe.append(zwischen[k1][l1]);
-				}
-			}
-		}
-
-		return "" + ausgabe;
+        if (encrypt) {
+            for (int i = 0; i < input.length; i++) {
+                int posT = (i * key + (int)Math.abs(i * (double)key / (double)outputSize)) % outputSize;
+                output[posT] = input[i];
+            }
+        } else {
+            int width = (int) Math.ceil(input.length / key);
+            for (int i = 0; i < input.length; i++) {
+                int posT = (i % key) * width + (int)Math.abs(i / (double)key);
+                output[posT] = input[i];
+            }
+        }
+        return new String(output);
 	}
-	
-	public static void analyse(String text){
+
+    public static void analyse(String text){
 		char[] eingabe = text.toCharArray();
 		Map<String, Integer> haufigkeit = new HashMap<String, Integer>();
 		
