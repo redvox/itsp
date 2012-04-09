@@ -1,5 +1,7 @@
 package itsp;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,22 +60,63 @@ public class Krypto {
         return new String(output);
 	}
 
-    public static void analyse(String text){
+	public static String skytale(String text, int key, boolean encrypt) {
 		char[] eingabe = text.toCharArray();
-		Map<String, Integer> haufigkeit = new HashMap<String, Integer>();
-		
-		for(int i=0;i<eingabe.length;i++){
-			if(haufigkeit.containsKey(""+eingabe[i])){
-				System.out.println("Yes:"+eingabe[i]);
-				haufigkeit.put(""+eingabe[i], haufigkeit.get(eingabe[i])+1);
-			} else {
-				System.out.println("No:"+eingabe[i]);
-				haufigkeit.put(""+eingabe[i], 1);
+		int mod = eingabe.length;
+
+		StringBuffer ausgabe = new StringBuffer();
+		int start = 0;
+
+		int b = 0;
+		if (encrypt) {
+			while (ausgabe.length() != eingabe.length) {
+				ausgabe.append(eingabe[b]);
+				b = (b + key) % mod;
+			}
+		} else {
+			while (ausgabe.length() != eingabe.length) {
+				ausgabe.append(eingabe[b]);
+				b = (b + key) % mod;
 			}
 		}
-		
-		for(String s : haufigkeit.keySet()){
-			System.out.println(s+" -> "+ haufigkeit.get(s));
+
+		return "" + ausgabe;
+	}
+
+	public static void analyse(String text) {
+		char[] eingabe = text.toCharArray();
+		Map<String, Integer> haufigkeit = new HashMap<String, Integer>();
+
+		for (int i = 0; i < eingabe.length; i++) {
+			if (haufigkeit.containsKey("" + eingabe[i])) {
+				haufigkeit.put("" + eingabe[i], haufigkeit.get("" + eingabe[i]) + 1);
+			} else {
+				haufigkeit.put("" + eingabe[i], 1);
+			}
 		}
+
+		for (String s : haufigkeit.keySet()) {
+			System.out.println(s + " -> " + haufigkeit.get(s));
+		}
+	}
+
+	public static void analyseFile(String file) {
+
+		BufferedReader reader;
+		StringBuffer content = new StringBuffer();;
+		try {
+			reader = new BufferedReader(new FileReader(file));
+			String s = null;
+
+			while ((s = reader.readLine()) != null) {
+				content.append(s).append(System.getProperty("line.separator"));
+			}			
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		analyse(""+content);
 	}
 }
