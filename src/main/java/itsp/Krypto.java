@@ -60,29 +60,6 @@ public class Krypto {
         return new String(output);
 	}
 
-	public static String skytale(String text, int key, boolean encrypt) {
-		char[] eingabe = text.toCharArray();
-		int mod = eingabe.length;
-
-		StringBuffer ausgabe = new StringBuffer();
-		int start = 0;
-
-		int b = 0;
-		if (encrypt) {
-			while (ausgabe.length() != eingabe.length) {
-				ausgabe.append(eingabe[b]);
-				b = (b + key) % mod;
-			}
-		} else {
-			while (ausgabe.length() != eingabe.length) {
-				ausgabe.append(eingabe[b]);
-				b = (b + key) % mod;
-			}
-		}
-
-		return "" + ausgabe;
-	}
-
 	public static void analyse(String text) {
 		char[] eingabe = text.toCharArray();
 		Map<String, Integer> haufigkeit = new HashMap<String, Integer>();
