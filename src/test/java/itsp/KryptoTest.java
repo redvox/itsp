@@ -49,7 +49,6 @@ public class KryptoTest {
 
     @Test
     public void SkytaleTest() {
-        for (Integer key : Iterables.toIterable(PrimitiveGenerators.integers(0, 100))) {
         for (Integer key : Iterables.toIterable(PrimitiveGenerators.integers(1, 100))) {
             for (String cleartext : Iterables.toIterable(PrimitiveGenerators.strings())) {
                 // encrypt
