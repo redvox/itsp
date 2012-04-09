@@ -39,12 +39,12 @@ public class KryptoTest {
     }
 
     @Test
-    public void SkytaleTestVector() {
+    public void SkytaleTestVectors() {
         String cleartext = "TROOPSHEADINGWESTNEEDMORESUPPLIESSENDGENERALDUBOISMENTOAID";
-        String expectedCyphertext = "TIDIEMRNMEREOGOSANOWRSLTPEEEDOSSSNUAHTUDBIENPGODAEPEIDELNS";
-        assertEquals(cleartext.length(), expectedCyphertext.length());
-        assertEquals(expectedCyphertext, Krypto.skytale(cleartext, 6, true));
-        assertEquals(cleartext, Krypto.skytale(expectedCyphertext, 6, false));
+        assertEquals(Krypto.skytale(cleartext, 1, true), cleartext);
+
+        cleartext = "HALLO";
+        assertEquals(Krypto.skytale(cleartext, 2, true), "HLOAL ");
     }
 
     @Test
@@ -56,7 +56,7 @@ public class KryptoTest {
 
                 // decrypt
                 String result = Krypto.skytale(cyphertext, key, false);
-                assertEquals(cleartext, result);
+                assertEquals(cleartext.trim(), result.trim());
             }
         }
     }
