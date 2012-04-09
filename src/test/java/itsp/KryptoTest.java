@@ -44,7 +44,7 @@ public class KryptoTest {
         assertEquals(Krypto.skytale(cleartext, 1, true), cleartext);
 
         cleartext = "HALLO";
-        assertEquals(Krypto.skytale(cleartext, 2, true), "HLOAL ");
+        assertEquals(Krypto.skytale(cleartext, 2, true).trim(), "HLAOL ".trim());
     }
 
     @Test
