@@ -71,12 +71,22 @@ public class DiffieHellman {
 		BigInteger r;
 		do {
 			r = new BigInteger(p.bitLength(), rnd);
-		} while (r.compareTo(p.subtract(BigInteger.valueOf(2))) >= 0);
+		} while (r.compareTo(p.subtract(BigInteger.valueOf(2))) < 0 && r.compareTo(BigInteger.ZERO) > 0);
 		return r;
 	}
 
 	public static BigInteger getPrime() {
-		return BigInteger.valueOf(-1);
+		SecureRandom rnd = new SecureRandom();
+		BigInteger prime;
+		boolean isPrime;
+		do {
+			prime = BigInteger.probablePrime(256, rnd);
+
+			int certainty = 1;
+			isPrime = prime.isProbablePrime(certainty);
+		} while (!isPrime);
+
+		return prime;
 	}
 
 	public static BigInteger calculate(BigInteger base, BigInteger expo,
