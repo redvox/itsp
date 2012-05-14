@@ -82,6 +82,15 @@ public class DiffieHellman {
 
 		return prime;
 	}
+	
+	public static BigInteger getGenerator(BigInteger p){
+		SecureRandom rnd = new SecureRandom();
+		BigInteger g;
+		do {
+			g = new BigInteger(p.bitLength(), rnd);
+		} while (g.compareTo(p.subtract(BigInteger.valueOf(2))) < 0 && g.compareTo(BigInteger.ONE) > 0 && g.mod(p) != BigInteger.ZERO);
+		return g;
+	}
 
 	public static BigInteger calculate(BigInteger base, BigInteger expo,
 			BigInteger mod) {
