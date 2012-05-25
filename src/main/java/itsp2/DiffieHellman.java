@@ -104,6 +104,10 @@ public class DiffieHellman {
         return tmp.mod(mod);
     }
 
+    public static BigInteger calculateJavaSM(BigInteger base, BigInteger expo, BigInteger mod) {
+        return base.modPow(expo, mod);
+    }
+
 	public static void p(String s) {
 		System.out.println(s);
 	}
@@ -145,8 +149,24 @@ public class DiffieHellman {
         return result;
     }
 
-    public static void runDHKE(BigInteger p, BigInteger g, BigInteger a, BigInteger b, boolean useSM) {
-        System.out.println("Diffie-Hellman Key Exchange " + (useSM ? " using Square-Multiply" : ""));
+    enum SMMethod {
+        NaiiveSM,
+        CustomCM,
+        NativeCM
+    }
+
+    public static void runDHKE(BigInteger p, BigInteger g, BigInteger a, BigInteger b, SMMethod sm) {
+        switch(sm) {
+            case NaiiveSM:
+                System.out.println("Diffie-Hellman Key Exchange");
+                break;
+            case CustomCM:
+                System.out.println("Diffie-Hellman Key Exchange using custom Square-Multiply");
+                break;
+            case NativeCM:
+                System.out.println("Diffie-Hellman Key Exchange using modPow");
+                break;
+        }
         System.out.println("p: " + p);
         System.out.println("g: " + g);
 
@@ -154,34 +174,92 @@ public class DiffieHellman {
         System.out.println("a: " + a);
         System.out.println("b: " + b);
 
-        BigInteger A = useSM ? DiffieHellman.calculateSM(g, a, p) : DiffieHellman.calculate(g, a, p);
+        BigInteger A = null;
+        switch(sm) {
+            case NaiiveSM:
+                A = DiffieHellman.calculate(g, a, p);
+                break;
+            case CustomCM:
+                A = DiffieHellman.calculateSM(g, a, p);
+                break;
+            case NativeCM:
+                A = DiffieHellman.calculateJavaSM(g, a, p);
+                break;
+        }
         System.out.println("A: " + A);
 
-        BigInteger B = useSM ? DiffieHellman.calculateSM(g, b, p) : DiffieHellman.calculate(g, b, p);
+        BigInteger B = null;
+        switch(sm) {
+            case NaiiveSM:
+                B = DiffieHellman.calculate(g, b, p);
+                break;
+            case CustomCM:
+                B = DiffieHellman.calculateSM(g, b, p);
+                break;
+            case NativeCM:
+                B = DiffieHellman.calculateJavaSM(g, b, p);
+                break;
+        }
         System.out.println("B: " + B);
 
-        BigInteger SA = useSM ? DiffieHellman.calculateSM(B, a, p) : DiffieHellman.calculate(B, a, p);
+        BigInteger SA = null;
+        switch(sm) {
+            case NaiiveSM:
+                SA = DiffieHellman.calculate(B, a, p);
+                break;
+            case CustomCM:
+                SA = DiffieHellman.calculateSM(B, a, p);
+                break;
+            case NativeCM:
+                SA = DiffieHellman.calculateJavaSM(B, a, p);
+                break;
+        }
         System.out.println("SA: " + SA);
 
-        BigInteger SB = useSM ? DiffieHellman.calculateSM(A, b, p) : DiffieHellman.calculate(A, b, p);
+        BigInteger SB = null;
+        switch(sm) {
+            case NaiiveSM:
+                SB = DiffieHellman.calculate(A, b, p);
+                break;
+            case CustomCM:
+                SB = DiffieHellman.calculateSM(A, b, p);
+                break;
+            case NativeCM:
+                SB = DiffieHellman.calculateJavaSM(A, b, p);
+                break;
+        }
         System.out.println("SB: " + SB);
     }
 
     public static void compareTest() {
-        BigInteger p = new BigInteger("125507");
+        /*BigInteger p = new BigInteger("125507");
         BigInteger g = new BigInteger("18690");
 
         BigInteger a = new BigInteger("16561");
         BigInteger b = new BigInteger("65379");
+          */
+        BigInteger p = new BigInteger("2207");
+        BigInteger g = new BigInteger("173");
+
+        BigInteger a = new BigInteger("25");
+        BigInteger b = new BigInteger("864");
 
         long start = System.nanoTime();
         for (int n = 0; n < 1; n++)
-            runDHKE(p, g, a, b, false);
-        System.out.println("Time for DHKE (without SM): " + (System.nanoTime() - start) / 1000 + " µs");
+            runDHKE(p, g, a, b, SMMethod.NaiiveSM);
+        System.out.println("============================");
+        System.out.println("Time for DHKE (without SM): " + (System.nanoTime() - start) / 1000+ " µs");
 
         start = System.nanoTime();
-        for (int n = 0; n < 1; n++)
-            runDHKE(p, g, a, b, true);
+        for (int n = 0; n < 2; n++)
+            runDHKE(p, g, a, b, SMMethod.CustomCM);
+        System.out.println("============================");
         System.out.println("Time for DHKE (with SM): " + (System.nanoTime() - start) / 1000 + " µs");
+
+        start = System.nanoTime();
+        for (int n = 0; n < 2; n++)
+            runDHKE(p, g, a, b, SMMethod.NativeCM);
+        System.out.println("============================");
+        System.out.println("Time for DHKE (with Java SM): " + (System.nanoTime() - start) / 1000 + " µs");
     }
 }
