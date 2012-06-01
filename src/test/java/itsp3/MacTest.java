@@ -1,7 +1,9 @@
-package test.java.itsp3;
+package itsp3;
 
 import itsp3.Mac;
 import org.testng.annotations.Test;
+
+import java.math.BigInteger;
 
 import static org.testng.Assert.assertEquals;
 
@@ -22,11 +24,19 @@ public class MacTest {
     }
 
     @Test
-    public void secretPrefixTest() {
+      public void secretPrefixTest() {
         String prefix = "0B";
 
         String expected = "78";
         String actual = Mac.secretPreMac(prefix, "/Users/tobias/dev/rep/itsp/testfile.bin", 1);
         assertEquals(actual, expected);
+    }
+
+    @Test
+    public void bruteForceTest() {
+        String prefix = "0B";
+
+        String expected = "78";
+        Mac.macBruteForce(4, "/Users/tobias/dev/rep/itsp/testfile.bin", "78");
     }
 }

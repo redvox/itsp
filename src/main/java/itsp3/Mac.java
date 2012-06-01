@@ -1,6 +1,8 @@
 package itsp3;
 
+import java.awt.datatransfer.StringSelection;
 import java.io.*;
+import java.math.BigInteger;
 import java.util.Arrays;
 
 public class Mac {
@@ -85,12 +87,12 @@ public class Mac {
 
 		//String initVector = "0000000000000000";
 		int macRounds = intextArray.length / blocksize;
-		p("Rounds: " + macRounds);
+		//p("Rounds: " + macRounds);
 
 		//byte[] intextArray = intext.toString().getBytes();
 		byte[] initVectorArray = new byte[blocksize]; //initVector.getBytes();
         Arrays.fill(initVectorArray, (byte)0);
-		p("Lange "+initVectorArray.length);
+		//p("Lange " + initVectorArray.length);
 		byte[] tmp = new byte[blocksize];
 
 		for (int j = 0; j < blocksize; j++) {
@@ -110,10 +112,42 @@ public class Mac {
         return ByteArrayToHexString(tmp);
 	}
 
-	public static void macBruteForce(int leadingZeros, String filename,
-			String macValue) {
+	public static void macBruteForce(int leadingZeros, String filename, String macValue) {
+        int blockSize = macValue.length() / 2;
+        int blockBits = blockSize * 8;
+
+        int possibleKeyBits = blockBits - leadingZeros;
+        p("possibleKeyBits: " + possibleKeyBits);
+        int possibleKeys = (new BigInteger("2").pow(possibleKeyBits)).intValue();
+
+        p("# of possible keys: " + possibleKeys);
+
+        int prefixNibbles = (leadingZeros / 4);
+        char[] prefix = new char[prefixNibbles];
+        Arrays.fill(prefix, '0');
+        String prefixStr = new String(prefix);
+
+        long start = System.currentTimeMillis();
+
+        for (int i = 0; i < possibleKeys; i++) {
+            BigInteger bi = new BigInteger("" + i);
+            String key = prefixStr + bi.toString(16);
+            if (key.length() % 2 == 1)
+                key = "0" + key;
+
+            // test key
+            String actualMac = secretPreMac(key, filename, blockSize);
+            if (actualMac.equals(macValue)) {
+                p("Found Key:        " + key);
+                p("# of tested keys: " + i);
+
+                long end = System.currentTimeMillis();
+                p("Time:             " + (end - start) + " ms");
+                break;
+            }
+        }
+
 		// Ausgabe
-		// Anzahl möglicher Schlüssel
 		// Anzahl getesteter Schlüssel
 		// Geheimer Schlüssel in Hexadezimalformat
 		// Laufzeit
